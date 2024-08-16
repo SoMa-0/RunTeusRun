@@ -22,14 +22,15 @@ struct StartingView: View {
         
         ZStack {
             Image("blueBackground")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-                .offset(y: -25)
+                .resizable() // makes the image view resizable
+                .scaledToFill() // scales the image to fill its container while preserving its aspect ratio
+                .ignoresSafeArea() // makes the image extend to the edges of the screen
+                .offset(y: -25) // adjusts the position of the image by applying a vertical offset
             
             Image(images[currentImageIndex])
                 .resizable()
-                .scaledToFit()
+                .scaledToFit() // scales the image to fit within its container while preserving its aspect ratio
+                // size of the image
                 .frame(maxWidth: UIScreen.main.bounds.width / 5,
                        maxHeight: UIScreen.main.bounds.width / 5)
                 .scaleEffect(scale)
@@ -45,8 +46,10 @@ struct StartingView: View {
                     }
                 }
             
+            // Give a different shape to the text
             CircleText(radius: 110, text: "Run, Teus, Run!")
                 .font(.custom("PixelifySans-VariableFont_wght", size: 24))
+                .foregroundStyle(.white)
             
             // Best score display
             VStack {
@@ -66,8 +69,8 @@ struct StartingView: View {
                 Spacer()
                 HStack {
                     Spacer()
+                    // Change the game state to start playing
                     Button(action: {
-                        // Change the game state to start playing
                         currentGameState = .playing
                     }) {
                         Text("Start")
@@ -150,8 +153,3 @@ extension Double {
     }
 }
 
-/*
-#Preview {
-    StartingView(currentGameState: .mainMenu)
-}
-*/

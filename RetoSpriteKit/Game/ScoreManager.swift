@@ -7,6 +7,7 @@
 
 import SpriteKit
 
+// Helper for the Score
 class ScoreManager {
 
     var scoreLabel: SKLabelNode!
@@ -16,6 +17,7 @@ class ScoreManager {
     
     weak var scene: SKScene?
 
+    // Initializes the place where you will put the objects, as well as the objects that will represent the score
     init(scene: SKScene) {
         self.scene = scene
 
@@ -23,6 +25,7 @@ class ScoreManager {
         loadHighScore()
     }
 
+    // Score Label
     func setupScoreLabel(in scene: SKScene) {
         scoreLabel = SKLabelNode(text: "Score: 0")
         scoreLabel.fontName = "Arial"
@@ -33,13 +36,8 @@ class ScoreManager {
         scene.addChild(scoreLabel)
     }
 
+    // Update the score based on the distance
     func updateScore() {
-        // Update the distance traveled based on the background movement speed
-        // let backgroundMoveSpeed: CGFloat = 3.0
-        // distanceTraveled += backgroundMoveSpeed
-
-        // Update the score based on the distance (you can adjust the scoring logic as needed)
-        // score = Int(distanceTraveled / 100) // Adjust the divisor to control scoring rate
 
         score += 1
         
@@ -50,9 +48,10 @@ class ScoreManager {
         checkAndUpdateHighScore()
     }
     
+    // Extra points (obtained by collecting objects) are added.
     func addScore(points: Int) {
         // Add points to the score
-        flowerCount += points * 100 // Add 100 points for each flower
+        flowerCount += points * 100 // Add 100 points for each object collected
 
         // Update the score label
         scoreLabel.text = "Score: \(score + flowerCount)"
@@ -61,27 +60,30 @@ class ScoreManager {
         checkAndUpdateHighScore()
     }
     
+    // The score is restarted each time a new game is started
     func resetScore() {
         score = 0
         flowerCount = 0
         updateScoreLabel()
     }
     
+    // The score label is updated
     private func updateScoreLabel() {
         scoreLabel.text = "Score: \(score + flowerCount)"
     }
     
-    // UserDefaults Key
+    // UserDefaults: "An interface to the user’s defaults database, where you store key-value pairs persistently across launches of your app"
+    // Basically you are building a key to save a single data across the whole app
     private let highScoreKey = "HighScore"
 
-    // Load high score from UserDefaults
+    // Load high score from UserDefaults to display it in the Starting View
     private func loadHighScore() {
         if let savedHighScore = UserDefaults.standard.value(forKey: highScoreKey) as? Int {
             score = savedHighScore
         }
     }
 
-    // Check and update high score
+    // Check and update high score if needed
     private func checkAndUpdateHighScore() {
         let currentTotalScore = score + flowerCount
 

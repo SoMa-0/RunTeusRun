@@ -11,6 +11,11 @@
 		D90DCE3A2C6292FA00C0D74E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90DCE392C6292FA00C0D74E /* ContentView.swift */; };
 		D90DCE3C2C6292FB00C0D74E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D90DCE3B2C6292FB00C0D74E /* Assets.xcassets */; };
 		D90DCE3F2C6292FB00C0D74E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D90DCE3E2C6292FB00C0D74E /* Preview Assets.xcassets */; };
+		D90DCE462C62950000C0D74E /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90DCE452C62950000C0D74E /* GameScene.swift */; };
+		D91503A12C6C019200AEF969 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91503A02C6C019200AEF969 /* GameOverView.swift */; };
+		D91503A92C6D646900AEF969 /* GameSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91503A82C6D646900AEF969 /* GameSceneView.swift */; };
+		D9DFB7B12C65983600264A9E /* StartingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DFB7B02C65983600264A9E /* StartingView.swift */; };
+		D9DFB7B32C65F08A00264A9E /* ScoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DFB7B22C65F08A00264A9E /* ScoreManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,12 @@
 		D90DCE392C6292FA00C0D74E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D90DCE3B2C6292FB00C0D74E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D90DCE3E2C6292FB00C0D74E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D90DCE452C62950000C0D74E /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		D91503A02C6C019200AEF969 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		D91503A82C6D646900AEF969 /* GameSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneView.swift; sourceTree = "<group>"; };
+		D9DFB7B02C65983600264A9E /* StartingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingView.swift; sourceTree = "<group>"; };
+		D9DFB7B22C65F08A00264A9E /* ScoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreManager.swift; sourceTree = "<group>"; };
+		D9DFB7B62C669ACE00264A9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +62,12 @@
 		D90DCE362C6292FA00C0D74E /* RetoSpriteKit */ = {
 			isa = PBXGroup;
 			children = (
+				D9DFB7B62C669ACE00264A9E /* Info.plist */,
 				D90DCE372C6292FA00C0D74E /* RetoSpriteKitApp.swift */,
 				D90DCE392C6292FA00C0D74E /* ContentView.swift */,
+				D91503A22C6D63AB00AEF969 /* Game */,
+				D91503A42C6D63BD00AEF969 /* WelcomeView */,
+				D91503A52C6D63C900AEF969 /* GameOver */,
 				D90DCE3B2C6292FB00C0D74E /* Assets.xcassets */,
 				D90DCE3D2C6292FB00C0D74E /* Preview Content */,
 			);
@@ -65,6 +80,32 @@
 				D90DCE3E2C6292FB00C0D74E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D91503A22C6D63AB00AEF969 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				D90DCE452C62950000C0D74E /* GameScene.swift */,
+				D9DFB7B22C65F08A00264A9E /* ScoreManager.swift */,
+				D91503A82C6D646900AEF969 /* GameSceneView.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		D91503A42C6D63BD00AEF969 /* WelcomeView */ = {
+			isa = PBXGroup;
+			children = (
+				D9DFB7B02C65983600264A9E /* StartingView.swift */,
+			);
+			path = WelcomeView;
+			sourceTree = "<group>";
+		};
+		D91503A52C6D63C900AEF969 /* GameOver */ = {
+			isa = PBXGroup;
+			children = (
+				D91503A02C6C019200AEF969 /* GameOverView.swift */,
+			);
+			path = GameOver;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +178,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D90DCE462C62950000C0D74E /* GameScene.swift in Sources */,
 				D90DCE3A2C6292FA00C0D74E /* ContentView.swift in Sources */,
+				D9DFB7B12C65983600264A9E /* StartingView.swift in Sources */,
+				D9DFB7B32C65F08A00264A9E /* ScoreManager.swift in Sources */,
 				D90DCE382C6292FA00C0D74E /* RetoSpriteKitApp.swift in Sources */,
+				D91503A12C6C019200AEF969 /* GameOverView.swift in Sources */,
+				D91503A92C6D646900AEF969 /* GameSceneView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,11 +321,14 @@
 				DEVELOPMENT_TEAM = ADA3W5SAF7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RetoSpriteKit/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Run, Teus, Run!";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,11 +353,14 @@
 				DEVELOPMENT_TEAM = ADA3W5SAF7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RetoSpriteKit/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Run, Teus, Run!";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -17,45 +17,45 @@ struct PhysicsCategory {
     static let object    : UInt32 = 0b100
 }
 
-// Different Game States
-enum GameState {
-    case mainMenu
-    case playing
-    case gameOver
-}
-
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    // Game State
+    // Actual Game State
     var gameState: GameState = .playing
     
-    // To stop the movement
-    var shouldMoveCharacter = true
-    
-    // Constants for the Spawn of enemies
-    var timeSinceLastSpawn = 0.0 as Double
-    var spawnRate = 2.0 as Double
-
+    // A closure that can be called when the game is over.
+    var onGameOver: (() -> Void)?
+        
     // Sprites
+    // The nodes represent each of the instances of the different existing characters
     var backgroundNodes: [SKSpriteNode] = []
     var characterNode: SKSpriteNode!
     var enemyNode: SKSpriteNode!
     var scoreManager: ScoreManager!
 
-    weak var gameViewController: GameViewController?
+    // Constants for the Spawn of enemies
+    var timeSinceLastSpawn = 0.0 as Double
+    var spawnRate = 2.0 as Double
 
-    // Initialize
+    // To stop the movement
+    var shouldMoveCharacter = true
+    
+    // Setup all the elements of the Scene
     override func didMove(to view: SKView) {
         setupBackground()
         setupCharacter()
         
+        // For the Score
         scoreManager = ScoreManager(scene: self)
         scoreManager.scoreLabel.zPosition = 2
         scoreManager.resetScore()
 
+        // contactDelegate allows you to assign an object to receive notifications when two physics bodies in the scene collide
+        // so this line helps to notify the scene that a collision is happening
         physicsWorld.contactDelegate = self
     }
     
     // Background
+    // This function sets up a scrolling background using three instances of SKSpriteNode.
+    // The background moves to create a scrolling effect, giving the illusion of movement.
     func setupBackground() {
         let backgroundTexture = SKTexture(imageNamed: "Background")
         
@@ -68,21 +68,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Set physics body to nil to avoid interaction
             backgroundNode.physicsBody = nil
             
+            
             addChild(backgroundNode)
             backgroundNodes.append(backgroundNode)
         }
     }
     
+    // This function moves the background nodes leftwards.
+    func moveBackground() {
+        let backgroundMoveSpeed: CGFloat = 10.0
+
+        for backgroundNode in backgroundNodes {
+            backgroundNode.position.x -= backgroundMoveSpeed
+
+            // Check if background is completely offscreen, then move it to the right
+            if backgroundNode.position.x < -backgroundNode.size.width / 2 {
+                backgroundNode.position.x += backgroundNode.size.width * CGFloat(backgroundNodes.count)
+            }
+        }
+    }
+    
     // Main Character
+    // This function configures the main character (Teus).
+    // It sets up the character's sprite, applies an animation, defines its position, and assigns a physics body for collision detection.
     func setupCharacter() {
         // Constants
-        let scale: CGFloat = 0.5
+        let scale: CGFloat = 0.3
             
         // Textures
-        let characterTexture1 = SKTexture(imageNamed: "ghost1")
-        let characterTexture2 = SKTexture(imageNamed: "ghost2")
-        characterTexture1.filteringMode = .nearest
-        characterTexture2.filteringMode = .nearest
+        let characterTexture1 = SKTexture(imageNamed: "teus")
+        let characterTexture2 = SKTexture(imageNamed: "teus")
+        // This ensures that when the texture is scaled, it retains a pixelated look.
+        characterTexture1.filteringMode = .nearest // .nearest = pixelated appearance
+        characterTexture2.filteringMode = .nearest // filteringMode = how the texture is rendered
             
         let runningAnimation = SKAction.animate(with: [characterTexture1, characterTexture2], timePerFrame: 0.10)
             
@@ -102,12 +120,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterNode.physicsBody = SKPhysicsBody(rectangleOf: physicsBox)
             
         characterNode.physicsBody?.affectedByGravity = false
-        characterNode.physicsBody?.isDynamic = true
+        characterNode.physicsBody?.isDynamic = true // can be affected by its environment
         characterNode.physicsBody?.mass = 100.0
         
-        characterNode.physicsBody?.categoryBitMask = PhysicsCategory.character
-        characterNode.physicsBody?.contactTestBitMask = PhysicsCategory.enemy | PhysicsCategory.object
-        characterNode.physicsBody?.collisionBitMask = PhysicsCategory.enemy | PhysicsCategory.object
+        characterNode.physicsBody?.categoryBitMask = PhysicsCategory.character // what kind of object the characterNode is
+        characterNode.physicsBody?.contactTestBitMask = PhysicsCategory.enemy | PhysicsCategory.object // which categories of physics bodies should generate contact notifications
+        characterNode.physicsBody?.collisionBitMask = PhysicsCategory.enemy | PhysicsCategory.object // which categories of physics bodies can physically collide with the characterNode
             
         // Run animation
         characterNode.run(SKAction.repeatForever(runningAnimation))
@@ -137,7 +155,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let array1 = [enemyTexture1, enemyTexture2]
         let array2 = [enemyTexture3, enemyTexture4]
         
-        // Randomly choose between the arrays
+        // Randomly choose between the arrays so it gives you random enemies
         let randomTexture: [SKTexture] = Bool.random() ? array1 : array2
         
         // Sprites
@@ -147,9 +165,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Animation
         let screenWidth = self.frame.size.width
-        let distanceOffscreen: CGFloat = 50.0
+        let distanceOffscreen: CGFloat = 50.0 // where does it starts
         let distanceToMove = screenWidth + distanceOffscreen + enemyTexture1.size().width * scale
         
+        // Movement
         let runningAnimation = SKAction.animate(with: randomTexture, timePerFrame: 0.20)
         
         let moveEnemy = SKAction.moveBy(x: -distanceToMove, y: 0.0, duration: TimeInterval(screenWidth / 500))
@@ -164,7 +183,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                                   height: enemyTexture1.size().height * scale)
         enemySprite.physicsBody = SKPhysicsBody(rectangleOf: enemyContact)
         
-        //enemySprite.physicsBody?.affectedByGravity = false
         enemySprite.physicsBody?.isDynamic = false
         
         enemySprite.physicsBody?.mass = 1.0
@@ -183,7 +201,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemySprite.zPosition = 2
     }
     
-    // Collectable Objects (Flowers)
+    // Collectable Objects
     func setupCollectable() {
         // Constants
         let scale: CGFloat = 0.5
@@ -228,7 +246,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Fading Out Function
     var isClickable = true
     var lastFadeOutTime: TimeInterval = 0.0
-
+    
+    // Handles touches on the screen. It disables physics interactions and triggers a fade-out and fade-in effect on the character
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard isClickable else {
             return
@@ -240,11 +259,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case .playing:
             handlePlayingTouches(touches)
         case .gameOver:
-            //handleGameOverTouches(touches)
             print("gameOver")
         }
     }
     
+    // Specifically handles touches during the playing state. It runs the fade-out animation on the character and temporarily disables physics interactions during the animation
     func handlePlayingTouches(_ touches: Set<UITouch>) {
         // Disable physics interactions during the fade-out animation
         characterNode.physicsBody?.categoryBitMask = PhysicsCategory.none
@@ -266,27 +285,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         isClickable = false
-                   
-        /*
-        for touch in touches {
-            let location = touch.location(in: self)
-            
-        }
-         */
     }
-
-    /*
-    func handleGameOverTouches(_ touches: Set<UITouch>) {
-        // Handle touches for the Game Over state
-        for touch in touches {
-            let location = touch.location(in: self)
-
-        }
-    }
-     */
 
     
-    // Add the enemies and move the background
+    // Called once per frame. It moves the background to create the scrolling effect, spawns enemies or collectable objects at random intervals, and updates the score.
     override func update(_ currentTime: TimeInterval) {
         guard shouldMoveCharacter else {
             return
@@ -310,39 +312,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // Collisions
+    // Triggered when two physics bodies begin contact
     func didBegin(_ contact: SKPhysicsContact) {
+        
+        // If the character collides with an enemy, the game state changes to gameOver, stopping the character's movement and invoking the onGameOver closure.
         if (contact.bodyA.categoryBitMask == PhysicsCategory.character && contact.bodyB.categoryBitMask == PhysicsCategory.enemy) ||
            (contact.bodyA.categoryBitMask == PhysicsCategory.enemy && contact.bodyB.categoryBitMask == PhysicsCategory.character) {
             
             // Show Game Over
             gameState = .gameOver
+            onGameOver?()
                                     
-            // Textures
-            let characterTexture1 = SKTexture(imageNamed: "ghostScared1")
-            let characterTexture2 = SKTexture(imageNamed: "ghostScared2")
-            characterTexture1.filteringMode = .nearest
-            characterTexture2.filteringMode = .nearest
-                
-            let scaredAnimation = SKAction.animate(with: [characterTexture1, characterTexture2], timePerFrame: 0.10)
-            
-            // Scared animation
-            characterNode.run(SKAction.repeatForever(scaredAnimation))
-            
             // If they collide, the ghost stays in the same position
+            /*
             shouldMoveCharacter = false
             characterNode.position = CGPoint(x: size.width / 5, y: size.height / 4)
             
             characterNode.physicsBody?.isDynamic = false
             characterNode.physicsBody?.affectedByGravity = false
             characterNode.physicsBody?.velocity = CGVector.zero
+             */
         }
+        
+        // If the character collides with a collectable object, the oject is removed from the scene, and the score increases by 10 points.
         else if (contact.bodyA.categoryBitMask == PhysicsCategory.character && contact.bodyB.categoryBitMask == PhysicsCategory.object) ||
                 (contact.bodyA.categoryBitMask == PhysicsCategory.object && contact.bodyB.categoryBitMask == PhysicsCategory.character) {
             
-            // Flower and character collided
+            // Object and character collided
             if let flowerNode = (contact.bodyA.categoryBitMask == PhysicsCategory.object) ? contact.bodyA.node as? SKSpriteNode : contact.bodyB.node as? SKSpriteNode {
                 
-                // Remove the flower from the scene
+                // Remove the object from the scene
                 flowerNode.removeFromParent()
                 
                 // Add 10 points to the score
@@ -350,32 +349,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
-    
-    // To move the Background
-    func moveBackground() {
-        let backgroundMoveSpeed: CGFloat = 10.0
-
-        for backgroundNode in backgroundNodes {
-            backgroundNode.position.x -= backgroundMoveSpeed
-
-            // Check if background is completely offscreen, then move it to the right
-            if backgroundNode.position.x < -backgroundNode.size.width / 2 {
-                backgroundNode.position.x += backgroundNode.size.width * CGFloat(backgroundNodes.count)
-            }
-        }
-    }
 }
 
-struct GameSceneView: View {
-    var gameScene: GameScene {
-        let scene = GameScene()
-        scene.size = UIScreen.main.bounds.size
-        scene.scaleMode = .aspectFill
-        return scene
-    }
-    
-    var body: some View {
-        SpriteView(scene: gameScene)
-            .ignoresSafeArea()
-    }
-}
